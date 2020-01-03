@@ -17,6 +17,8 @@ command_help_menu(){
   echo "    todo    Moves a task to Todo"
   echo "    doing   Moves a task to Doing"
   echo "    done    Moves a task to Done"
+  echo "    change  Changes task"
+  echo "    delete  Deletes task"
   echo ""
 }
 
