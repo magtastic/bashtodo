@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# GLOBAL VARS
 PROGRAM_NAME=$(basename $0)
 RC_FILE_LOCATION=~/.todomagrc
 VALID_CONFIG_VARS=("TODOMAG_PATH", "CURRENT_PROJECT")
@@ -7,21 +8,8 @@ TODO_FOLDER_NAME="todo"
 DOING_FOLDER_NAME="doing"
 DONE_FOLDER_NAME="done"
 
-command_help_menu(){
-  echo ""
-  echo "Usage: $PROGRAM_NAME <command> [options]"
-  echo ""
-  echo "command:"
-  echo "    init    Initialize todos"
-  echo "    add     Adds a new task to Todo"
-  echo "    todo    Moves a task to Todo"
-  echo "    doing   Moves a task to Doing"
-  echo "    done    Moves a task to Done"
-  echo "    change  Changes task"
-  echo "    delete  Deletes task"
-  echo ""
-}
 
+# HELPER FUNCTIONS
 getProjectName(){
   read -e projectName
   echo "CURRENT_PROJECT=$projectName"
@@ -38,6 +26,23 @@ getCurrentProjectPath() {
   source $RC_FILE_LOCATION
   echo "$TODO_BASE_PATH/$CURRENT_PROJECT"
   return
+}
+
+
+# COMMANDS
+command_help_menu(){
+  echo ""
+  echo "Usage: $PROGRAM_NAME <command> [options]"
+  echo ""
+  echo "command:"
+  echo "    init    Initialize todos"
+  echo "    add     Adds a new task to Todo"
+  echo "    todo    Moves a task to Todo"
+  echo "    doing   Moves a task to Doing"
+  echo "    done    Moves a task to Done"
+  echo "    change  Changes task"
+  echo "    delete  Deletes task"
+  echo ""
 }
 
 command_init(){
@@ -261,6 +266,164 @@ command_delete(){
   echo "Task not found."
 }
 
+command_sp() {
+  command_switch_projects $@
+}
+
+command_switch_projects() {
+  source $RC_FILE_LOCATION
+  project_name=$@
+
+  if [ -z "$project_name" ]
+  then
+    echo "Please insert a project name..."
+    read project_name
+  fi
+
+  if [ $project_name = $CURRENT_PROJECT ]
+  then
+    echo "$project_name is already active"
+    return
+  fi
+
+  newProjectPath="$TODO_BASE_PATH/$project_name"
+
+  if [ -d $newProjectPath ]
+  then
+    echo "$(sed '/^CURRENT_PROJECT=/ d' $RC_FILE_LOCATION)" > $RC_FILE_LOCATION
+    echo "CURRENT_PROJECT=$project_name" >> $RC_FILE_LOCATION
+    echo "${newProjectPath#${TODO_BASE_PATH}/} is now active"
+  else
+    echo "Could not find project: $project_name"
+    echo "Use the projects (p) command to list all projects"
+  fi
+}
+
+command_ccp(){
+  command_change_current_project $@
+}
+
+command_change_current_project(){
+  source $RC_FILE_LOCATION
+  project_name=$@
+
+  if [ -z "$project_name" ]
+  then
+    echo "Please insert a project name..."
+    read project_name
+  fi
+
+
+  [[ $project_name = *[[:space:]]* ]]  && echo "Cannot name project with whitespaces" && return
+
+  mv "$TODO_BASE_PATH/$CURRENT_PROJECT" "$TODO_BASE_PATH/$project_name"
+  echo "$(sed '/^CURRENT_PROJECT=/ d' $RC_FILE_LOCATION)" > $RC_FILE_LOCATION
+  echo "CURRENT_PROJECT=$project_name" >> $RC_FILE_LOCATION
+  echo "Project changed from $CURRENT_PROJECT to $project_name"
+}
+
+command_dp(){
+  command_delete_project $@
+}
+
+command_delete_project(){
+  source $RC_FILE_LOCATION
+  project_name=$@
+
+  if [ -z "$project_name" ]
+  then
+    echo "Please insert a project name..."
+    read project_name
+  fi
+
+  if [ $project_name = $CURRENT_PROJECT ]
+  then
+    echo "Sorry. Cannot delete active projects."
+    echo "Please switch projects (sp) and try again."
+    return
+  fi
+
+  if [ -d "$TODO_BASE_PATH/$project_name" ]
+  then
+    rm -rf "$TODO_BASE_PATH/$project_name"
+    echo "Project deleted."
+  else
+    echo "Could not find project: $project_name"
+    echo "Use the projects (p) command to list all projects"
+  fi
+}
+
+
+command_np(){
+  command_new_project $@
+}
+
+command_new_project() {
+  source $RC_FILE_LOCATION
+  project_name=$@
+
+  if [ -z "$project_name" ]
+  then
+    echo "Please insert a project name..."
+    read project_name
+  fi
+
+  [[ $project_name = *[[:space:]]* ]]  && echo "Cannot name project with whitespaces" && return
+
+  newProjectPath="$TODO_BASE_PATH/$project_name"
+
+  if [ -d "$newProjectPath" ]
+  then
+    echo "You already have a project named: $project_name."
+    return
+  fi
+
+
+  mkdir -p "$newProjectPath"
+  mkdir -p "$newProjectPath/$TODO_FOLDER_NAME"
+  mkdir -p "$newProjectPath/$DOING_FOLDER_NAME"
+  mkdir -p "$newProjectPath/$DONE_FOLDER_NAME"
+
+  echo "New project created: $project_name"
+  command_sp $project_name
+}
+
+command_p() {
+  command_projects $@
+}
+
+command_projects() {
+  source $RC_FILE_LOCATION
+  num_of_projects=$(ls -1 "$TODO_BASE_PATH" | wc -l | tr -d '[:space:]')
+
+  if [ "$num_of_projects" = "1" ]; then
+    echo "You have $num_of_projects project."
+  else
+    echo "You have $num_of_projects projects."
+  fi
+
+  echo "Projects:"
+  shopt -s nullglob
+  for projectPath in $TODO_BASE_PATH/*; do
+    if [ -d ${projectPath} ]; then
+      # Removes the base path from project path.
+      project_name="${projectPath#${TODO_BASE_PATH}/}"
+
+      num_of_todos=$(ls -1 "$projectPath/$TODO_FOLDER_NAME" | wc -l | tr -d '[:space:]')
+      num_of_doings=$(ls -1 "$projectPath/$DOING_FOLDER_NAME" | wc -l | tr -d '[:space:]')
+      num_of_dones=$(ls -1 "$projectPath/$DONE_FOLDER_NAME" | wc -l | tr -d '[:space:]')
+
+      if [ $project_name = $CURRENT_PROJECT ]
+      then
+        echo " Active: $project_name ($(($num_of_dones + $num_of_todos + $num_of_doings)))"
+      else
+        echo " $project_name ($(($num_of_dones + $num_of_todos + $num_of_doings)))"
+      fi
+
+    fi
+  done
+}
+
 command_ls(){
   source $RC_FILE_LOCATION
 
@@ -273,6 +436,8 @@ command_ls(){
   num_of_doings=$(ls -1 "$currentDoingPath" | wc -l | tr -d '[:space:]')
   num_of_dones=$(ls -1 "$currentDonePath" | wc -l | tr -d '[:space:]')
 
+  echo "Current Project: $CURRENT_PROJECT"
+  echo "--------------------"
   echo "TODO ($num_of_todos):"
   shopt -s nullglob
 
