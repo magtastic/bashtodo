@@ -343,8 +343,27 @@ command_delete_project(){
     return
   fi
 
-  if [ -d "$TODO_BASE_PATH/$project_name" ]
+  projectPath="$TODO_BASE_PATH/$project_name"
+
+  if [ -d $projectPath ]
   then
+    num_of_todos=$(ls -1 "$projectPath/$TODO_FOLDER_NAME" | wc -l | tr -d '[:space:]')
+    num_of_doings=$(ls -1 "$projectPath/$DOING_FOLDER_NAME" | wc -l | tr -d '[:space:]')
+    num_of_dones=$(ls -1 "$projectPath/$DONE_FOLDER_NAME" | wc -l | tr -d '[:space:]')
+    total_num_of_tasks=$(($num_of_dones + $num_of_todos + $num_of_doings))
+
+    if [ "$total_num_of_tasks" -gt "0" ]; then
+      echo "$project_name has $total_num_of_tasks. Are you sure you want to delete the project?"
+      while true; do
+        read -p "Do you wish to install this program? (y/n)" yn
+          case $yn in
+            [Yy]* ) break;;
+            [Nn]* ) echo "Canceled."; exit;;
+            * ) echo "Please answer yes or no.";;
+          esac
+      done
+    fi
+
     rm -rf "$TODO_BASE_PATH/$project_name"
     echo "Project deleted."
   else
