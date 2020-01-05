@@ -8,6 +8,19 @@ TODO_FOLDER_NAME="todo"
 DOING_FOLDER_NAME="doing"
 DONE_FOLDER_NAME="done"
 
+NONE='\033[00m'
+#COLORS
+RED='\033[01;31m'
+GREEN='\033[01;32m'
+YELLOW='\033[01;33m'
+PURPLE='\033[01;35m'
+CYAN='\033[01;36m'
+WHITE='\033[01;37m'
+
+#STYLES
+BOLD='\033[1m'
+UNDERLINE='\033[4m'
+
 
 # HELPER FUNCTIONS
 getProjectName(){
@@ -30,6 +43,10 @@ getCurrentProjectPath() {
 
 
 # COMMANDS
+command_tst() {
+  echo -e "${RED}Test red${NONE} more text no color but this is ${BOLD}bold${NONE} and this is ${UNDERLINE}underline.${NONE}"
+}
+
 command_help_menu(){
   echo ""
   echo "Usage: $PROGRAM_NAME <command> [options]"
@@ -83,7 +100,7 @@ command_init(){
   mkdir -p "$TODO_BASE_PATH/$CURRENT_PROJECT/$DOING_FOLDER_NAME"
   mkdir -p "$TODO_BASE_PATH/$CURRENT_PROJECT/$DONE_FOLDER_NAME"
 
-  echo "Setup complete!"
+  echo "${BOLD}Setup complete!${NONE}"
 }
 
 command_add(){
@@ -96,7 +113,7 @@ command_add(){
   echo "TIMESTAMP=$(date)" >> "$currentTodoPath/$id.txt"
   echo "ID=$id" >> "$currentTodoPath/$id.txt"
   echo "TASK=$task" >> "$currentTodoPath/$id.txt"
-  echo "Task created. (id: $id)"
+  echo -e "${GREEN}Task created. (id: $id)${NONE}"
 }
 
 command_del(){
@@ -119,7 +136,7 @@ command_change(){
     echo "$(sed '/^TASK=/ d' "$currentTodoPath/$task_id.txt")" > "$currentTodoPath/$task_id.txt"
     echo "TASK=$newTask" >> "$currentTodoPath/$task_id.txt"
 
-    echo "Task is changed."
+    echo -e "${GREEN}Task is changed.${NONE}"
     echo "Task: $(sed -n -e '/^TASK=/p' "$currentTodoPath/$task_id.txt" | sed 's/^TASK=//') (TODO)"
     return
   fi
@@ -131,7 +148,7 @@ command_change(){
     echo "$(sed '/^TASK=/ d' "$currentDoingPath/$task_id.txt")" > "$currentDoingPath/$task_id.txt"
     echo "TASK=$newTask" >> "$currentDoingPath/$task_id.txt"
 
-    echo "Task is changed."
+    echo -e "${GREEN}Task is changed.${NONE}"
     echo "Task: $(sed -n -e '/^TASK=/p' "$currentDoingPath/$task_id.txt" | sed 's/^TASK=//') (DOING)"
     return
   fi
@@ -143,7 +160,7 @@ command_change(){
     echo "$(sed '/^TASK=/ d' "$currentDonePath/$task_id.txt")" > "$currentDonePath/$task_id.txt"
     echo "TASK=$newTask" >> "$currentDonePath/$task_id.txt"
 
-    echo "Task is changed."
+    echo -e "${GREEN}Task is changed.${NONE}"
     echo "Task: $(sed -n -e '/^TASK=/p' "$currentDonePath/$task_id.txt" | sed 's/^TASK=//') (DONE)"
     return
   fi
@@ -160,22 +177,22 @@ command_doing(){
 
   if [ -f "$currentTodoPath/$task_id.txt" ]; then
     mv "$currentTodoPath/$task_id.txt" "$currentDoingPath/$task_id.txt"
-    echo "TaskId: $task_id was moved from TODO to DOING"
+    echo -e "${GREEN}TaskId: $task_id was moved from TODO to DOING${NONE}"
     return
   fi
 
   if [ -f "$currentDonePath/$task_id.txt" ]; then
     mv "$currentDonePath/$task_id.txt" "$currentDoingPath/$task_id.txt"
-    echo "TaskId: $task_id was moved from DONE to DOING"
+    echo -e "${GREEN}TaskId: $task_id was moved from DONE to DOING${NONE}"
     return
   fi
 
   if [ -f "$currentDoingPath/$task_id.txt" ]; then
-    echo "TaskId: $task_id is already in DOING"
+    echo -e "${YELLOW}TaskId: $task_id is already in DOING${NONE}"
     return
   fi
 
-  echo "Did not find task with id: $task_id"
+  echo -e "${RED}Did not find task with id: $task_id${NONE}"
 }
 
 command_done(){
@@ -189,22 +206,22 @@ command_done(){
 
   if [ -f "$currentTodoPath/$task_id.txt" ]; then
     mv "$currentTodoPath/$task_id.txt" "$currentDonePath/$task_id.txt"
-    echo "TaskId: $task_id was moved from TODO to DONE"
+    echo -e "${GREEN}TaskId: $task_id was moved from TODO to DONE${NONE}"
     return
   fi
 
   if [ -f "$currentDoingPath/$task_id.txt" ]; then
     mv "$currentDoingPath/$task_id.txt" "$currentDonePath/$task_id.txt"
-    echo "TaskId: $task_id was moved from DOING to DONE"
+    echo -e "${GREEN}TaskId: $task_id was moved from DOING to DONE${NONE}"
     return
   fi
 
   if [ -f "$currentDonePath/$task_id.txt" ]; then
-    echo "TaskId: $task_id is already in DONE"
+    echo -e "${YELLOW}TaskId: $task_id is already in DONE${NONE}"
     return
   fi
 
-  echo "Did not find task with id: $task_id"
+  echo -e "${RED}Did not find task with id: $task_id${NONE}"
 }
 
 command_todo(){
@@ -218,22 +235,22 @@ command_todo(){
 
   if [ -f "$currentDoingPath/$task_id.txt" ]; then
     mv "$currentDoingPath/$task_id.txt" "$currentTodoPath/$task_id.txt"
-    echo "TaskId: $task_id was moved from DOING to TODO"
+    echo -e "${GREEN}TaskId: $task_id was moved from DOING to TODO${NONE}"
     return
   fi
 
   if [ -f "$currentDonePath/$task_id.txt" ]; then
     mv "$currentDonePath/$task_id.txt" "$currentTodoPath/$task_id.txt"
-    echo "TaskId: $task_id was moved from DONE to TODO"
+    echo -e "${GREEN}TaskId: $task_id was moved from DONE to TODO${NONE}"
     return
   fi
 
   if [ -f "$currentTodoPath/$task_id.txt" ]; then
-    echo "TaskId: $task_id is already in TODO"
+    echo -e "${YELLOW}TaskId: $task_id is already in TODO${NONE}"
     return
   fi
 
-  echo "Did not find task with id: $task_id"
+  echo -e "${{RED}Did not find task with id: $task_id${NONE}"
 }
 
 command_delete(){
@@ -247,23 +264,23 @@ command_delete(){
 
   if [ -f "$currentTodoPath/$task_id.txt" ]; then
     rm  -f "$currentTodoPath/$task_id.txt"
-    echo "Task deleted."
+    echo -e "${GREEN}Task deleted.${NONE}"
     return
   fi
 
   if [ -f "$currentDoingPath/$task_id.txt" ]; then
     rm  -f "$currentDoingPath/$task_id.txt"
-    echo "Task deleted."
+    echo -e "${GREEN}Task deleted.${NONE}"
     return
   fi
 
   if [ -f "$currentDonePath/$task_id.txt" ]; then
     rm  -f "$currentDonePath/$task_id.txt"
-    echo "Task deleted."
+    echo -e "${GREEN}Task deleted.${NONE}"
     return
   fi
 
-  echo "Task not found."
+  echo -e "${RED}Task not found.${NONE}"
 }
 
 command_sp() {
@@ -282,7 +299,7 @@ command_switch_projects() {
 
   if [ $project_name = $CURRENT_PROJECT ]
   then
-    echo "$project_name is already active"
+    echo -e "${YELLOW}$project_name is already active${NONE}"
     return
   fi
 
@@ -292,9 +309,9 @@ command_switch_projects() {
   then
     echo "$(sed '/^CURRENT_PROJECT=/ d' $RC_FILE_LOCATION)" > $RC_FILE_LOCATION
     echo "CURRENT_PROJECT=$project_name" >> $RC_FILE_LOCATION
-    echo "${newProjectPath#${TODO_BASE_PATH}/} is now active"
+    echo -e "${GREEN}${newProjectPath#${TODO_BASE_PATH}/} is now active${NONE}"
   else
-    echo "Could not find project: $project_name"
+    echo -e "${RED}Could not find project: $project_name${NONE}"
     echo "Use the projects (p) command to list all projects"
   fi
 }
@@ -314,12 +331,12 @@ command_change_current_project(){
   fi
 
 
-  [[ $project_name = *[[:space:]]* ]]  && echo "Cannot name project with whitespaces" && return
+  [[ $project_name = *[[:space:]]* ]]  && echo -e "${RED}Cannot name project with whitespaces${NONE}" && return
 
   mv "$TODO_BASE_PATH/$CURRENT_PROJECT" "$TODO_BASE_PATH/$project_name"
   echo "$(sed '/^CURRENT_PROJECT=/ d' $RC_FILE_LOCATION)" > $RC_FILE_LOCATION
   echo "CURRENT_PROJECT=$project_name" >> $RC_FILE_LOCATION
-  echo "Project changed from $CURRENT_PROJECT to $project_name"
+  echo -e "${GREEN}Project changed from $CURRENT_PROJECT to $project_name${NONE}"
 }
 
 command_dp(){
@@ -338,7 +355,7 @@ command_delete_project(){
 
   if [ $project_name = $CURRENT_PROJECT ]
   then
-    echo "Sorry. Cannot delete active projects."
+    echo -e "${RED}Sorry. Cannot delete active projects.${NONE}"
     echo "Please switch projects (sp) and try again."
     return
   fi
@@ -359,15 +376,15 @@ command_delete_project(){
           case $yn in
             [Yy]* ) break;;
             [Nn]* ) echo "Canceled."; exit;;
-            * ) echo "Please answer yes or no.";;
+            * ) echo -e "${BOLD}Please answer yes or no.${NONE}";;
           esac
       done
     fi
 
     rm -rf "$TODO_BASE_PATH/$project_name"
-    echo "Project deleted."
+    echo -e "${GREEN}Project deleted.${NONE}"
   else
-    echo "Could not find project: $project_name"
+    echo -e "${RED}Could not find project: $project_name${NONE}"
     echo "Use the projects (p) command to list all projects"
   fi
 }
@@ -387,13 +404,13 @@ command_new_project() {
     read project_name
   fi
 
-  [[ $project_name = *[[:space:]]* ]]  && echo "Cannot name project with whitespaces" && return
+  [[ $project_name = *[[:space:]]* ]]  && echo -e "${RED}Cannot name project with whitespaces${NONE}" && return
 
   newProjectPath="$TODO_BASE_PATH/$project_name"
 
   if [ -d "$newProjectPath" ]
   then
-    echo "You already have a project named: $project_name."
+    echo -e "${YELLOW}You already have a project named: $project_name.${NONE}"
     return
   fi
 
@@ -403,7 +420,7 @@ command_new_project() {
   mkdir -p "$newProjectPath/$DOING_FOLDER_NAME"
   mkdir -p "$newProjectPath/$DONE_FOLDER_NAME"
 
-  echo "New project created: $project_name"
+  echo -e "${GREEN}New project created: $project_name${NONE}"
   command_sp $project_name
 }
 
@@ -434,9 +451,9 @@ command_projects() {
 
       if [ $project_name = $CURRENT_PROJECT ]
       then
-        echo " Active: $project_name ($(($num_of_dones + $num_of_todos + $num_of_doings)))"
+        echo -e "${GREEN} $project_name ($(($num_of_dones + $num_of_todos + $num_of_doings)))${NONE}"
       else
-        echo " $project_name ($(($num_of_dones + $num_of_todos + $num_of_doings)))"
+        echo -e "${YELLOW} $project_name ($(($num_of_dones + $num_of_todos + $num_of_doings)))${NONE}"
       fi
 
     fi
@@ -455,9 +472,9 @@ command_ls(){
   num_of_doings=$(ls -1 "$currentDoingPath" | wc -l | tr -d '[:space:]')
   num_of_dones=$(ls -1 "$currentDonePath" | wc -l | tr -d '[:space:]')
 
-  echo "Current Project: $CURRENT_PROJECT"
+  echo -e "${BOLD}Current Project: $CURRENT_PROJECT${NONE}"
   echo "--------------------"
-  echo "TODO ($num_of_todos):"
+  echo -e "${RED}${UNDERLINE}TODO ($num_of_todos):${NONE}${RED}"
   shopt -s nullglob
 
   if [ "$num_of_todos" -gt "0" ]; then
@@ -469,12 +486,12 @@ command_ls(){
 
     for item in "${todoArray[@]}"
     do
-      echo "($(sed -n -e '/^ID=/p' $item | sed 's/^ID=//')) Task: $(sed -n -e '/^TASK=/p' $item | sed 's/^TASK=//') (created at: $(sed -n -e '/^TIMESTAMP=/p' $item | sed 's/^TIMESTAMP=//'))"
+      echo "($(sed -n -e '/^ID=/p' $item | sed 's/^ID=//'))  $(sed -n -e '/^TASK=/p' $item | sed 's/^TASK=//') (created at: $(sed -n -e '/^TIMESTAMP=/p' $item | sed 's/^TIMESTAMP=//'))"
     done
   fi
 
-  echo "--------------------"
-  echo "DOING ($num_of_doings):"
+  echo -e "${NONE}--------------------"
+  echo -e "${YELLOW}${UNDERLINE}DOING ($num_of_doings):${NONE}${YELLOW}"
 
   if [ "$num_of_doings" -gt "0" ]; then
     declare -a doingArray
@@ -485,12 +502,12 @@ command_ls(){
 
     for item in "${doingArray[@]}"
     do
-      echo "($(sed -n -e '/^ID=/p' $item | sed 's/^ID=//')) Task: $(sed -n -e '/^TASK=/p' $item | sed 's/^TASK=//') (created at: $(sed -n -e '/^TIMESTAMP=/p' $item | sed 's/^TIMESTAMP=//'))"
+      echo "($(sed -n -e '/^ID=/p' $item | sed 's/^ID=//'))  $(sed -n -e '/^TASK=/p' $item | sed 's/^TASK=//') (created at: $(sed -n -e '/^TIMESTAMP=/p' $item | sed 's/^TIMESTAMP=//'))"
     done
   fi
 
-  echo "--------------------"
-  echo "DONE ($num_of_dones):"
+  echo -e "${NONE}--------------------"
+  echo -e "${GREEN}${UNDERLINE}DONE ($num_of_dones):${NONE}${GREEN}"
 
   if [ "$num_of_dones" -gt "0" ]; then
     declare -a doneArray
@@ -501,12 +518,12 @@ command_ls(){
 
     for item in "${doneArray[@]}"
     do
-      echo "($(sed -n -e '/^ID=/p' $item | sed 's/^ID=//')) Task: $(sed -n -e '/^TASK=/p' $item | sed 's/^TASK=//') (created at: $(sed -n -e '/^TIMESTAMP=/p' $item | sed 's/^TIMESTAMP=//'))"
+      echo "($(sed -n -e '/^ID=/p' $item | sed 's/^ID=//'))  $(sed -n -e '/^TASK=/p' $item | sed 's/^TASK=//') (created at: $(sed -n -e '/^TIMESTAMP=/p' $item | sed 's/^TIMESTAMP=//'))"
     done
   fi
 
-  echo "--------------------"
-  echo "total ($(($num_of_dones + $num_of_todos + $num_of_doings)))"
+  echo -e "${NONE}--------------------"
+  echo -e "${CYAN}${UNDERLINE}total ($(($num_of_dones + $num_of_todos + $num_of_doings)))${NONE}"
 }
 
 subcommand=$1
