@@ -41,7 +41,6 @@ getCurrentProjectPath() {
   return
 }
 
-
 # COMMANDS
 command_tst() {
   echo -e "${RED}Test red${NONE} more text no color but this is ${BOLD}bold${NONE} and this is ${UNDERLINE}underline.${NONE}"
@@ -52,13 +51,19 @@ command_help_menu(){
   echo "Usage: $PROGRAM_NAME <command> [options]"
   echo ""
   echo "command:"
-  echo "    init    Initialize todos"
-  echo "    add     Adds a new task to Todo"
-  echo "    todo    Moves a task to Todo"
-  echo "    doing   Moves a task to Doing"
-  echo "    done    Moves a task to Done"
-  echo "    change  Changes task"
-  echo "    delete  Deletes task"
+  echo "    init                            Initialize todos"
+  echo "    new_project(np)                 Creates a new project"
+  echo "    projects(p)                     Lists all projects"
+  echo "    change_current_project(ccp)     Renames the current project"
+  echo "    switch_projects(sp)             Switches focus to another project"
+  echo "    delete_project(dp)              Deletes a todo project"
+  echo "    add                             Adds a new task to Todo"
+  echo "    ls                              Lists tasks in current project"
+  echo "    todo                            Moves a task to Todo"
+  echo "    doing                           Moves a task to Doing"
+  echo "    done                            Moves a task to Done"
+  echo "    change                          Changes task"
+  echo "    delete(del)                     Deletes task"
   echo ""
 }
 
@@ -100,7 +105,7 @@ command_init(){
   mkdir -p "$TODO_BASE_PATH/$CURRENT_PROJECT/$DOING_FOLDER_NAME"
   mkdir -p "$TODO_BASE_PATH/$CURRENT_PROJECT/$DONE_FOLDER_NAME"
 
-  echo "${BOLD}Setup complete!${NONE}"
+  echo -e "${BOLD}Setup complete!${NONE}"
 }
 
 command_add(){
@@ -116,9 +121,6 @@ command_add(){
   echo -e "${GREEN}Task created. (id: $id)${NONE}"
 }
 
-command_del(){
-  command_delete $@
-}
 
 command_change(){
   source $RC_FILE_LOCATION
@@ -251,6 +253,10 @@ command_todo(){
   fi
 
   echo -e "${{RED}Did not find task with id: $task_id${NONE}"
+}
+
+command_del(){
+  command_delete $@
 }
 
 command_delete(){
