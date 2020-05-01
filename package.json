@@ -1,0 +1,20 @@
+{
+  "name": "bashtodo",
+  "version": "1.0.0",
+  "description": "A simple terminal todo app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/magtastic/bashtodo.git"
+  },
+  "keywords": [
+    "bash",
+    "terminal",
+    "todo"
+  ],
+  "author": "magtastic",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/magtastic/bashtodo/issues"
+  },
+  "homepage": "https://github.com/magtastic/bashtodo#readme"
+}
