@@ -4,6 +4,20 @@ This is a super simple todo app. You can sort your tasks into projects and sort 
 
 ## Commands
 
+- [Init](#init)
+- [New project](#new_project-_np_)
+- [Switch project](#switch_projects-_sp_)
+- [List projects](#projects-_p_)
+- [Rename project](#change_current_project-_ccp_)
+- [Delete project](#delete_project-_dp_)
+- [Create task](#add)
+- [Move task to todo](#todo)
+- [Move task to doing](#doing)
+- [Move task to done](#done)
+- [List tasks](#ls)
+- [Change task](#change)
+- [Delete task](#delete-_del_)
+
 ### **init**
 
 Initialize todos.
