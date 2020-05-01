@@ -1,6 +1,6 @@
 {
   "name": "bashtodo",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A simple terminal todo app",
   "repository": {
     "type": "git",
@@ -11,6 +11,9 @@
     "terminal",
     "todo"
   ],
+  "bin": {
+    "bashtodo": "./bashtodo.sh"
+  },
   "author": "magtastic",
   "license": "ISC",
   "bugs": {

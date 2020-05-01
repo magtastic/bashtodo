@@ -2,6 +2,24 @@
 
 This is a super simple todo app. You can sort your tasks into projects and sort your task into three columns, _"TODO"_, _"DOING"_ and _"DONE"_. Every created tasks gets automatically assigned an id. Every command that changes a task requires a task ID.
 
+## Setup
+
+```shell
+npm i -g bashtodo
+```
+
+or
+
+```shell
+yarn global add bashtodo
+```
+
+> I recommend creating an alias. Copy this to your .bashrc or .zshrc
+
+```shell
+alias td="bashtodo"
+```
+
 ## Commands
 
 - [Init](#init)
