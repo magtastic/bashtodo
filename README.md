@@ -23,23 +23,79 @@ alias td="bashtodo"
 ## Commands
 
 - [Init](#init)
+- [List tasks](#ls)
+- [Create task](#add)
+- [Move task to todo](#todo)
+- [Move task to doing](#doing)
+- [Move task to done](#done)
+- [Change task](#change)
+- [Delete task](#delete-_del_)
 - [New project](#new_project-_np_)
 - [Switch project](#switch_projects-_sp_)
 - [List projects](#projects-_p_)
 - [Rename project](#change_current_project-_ccp_)
 - [Delete project](#delete_project-_dp_)
-- [Create task](#add)
-- [Move task to todo](#todo)
-- [Move task to doing](#doing)
-- [Move task to done](#done)
-- [List tasks](#ls)
-- [Change task](#change)
-- [Delete task](#delete-_del_)
 
 ### **init**
 
 Initialize todos.
 ![init](./assets/init.gif)
+
+### **ls**
+
+Lists tasks in current project
+
+![ls](./assets/ls.gif)
+
+### **add**
+
+**argument: <TASK_DESCRIPTION>**
+
+Adds a new task to Todo
+
+![add](./assets/add.gif)
+
+### **todo**
+
+**argument: <TASK_ID>**
+
+Moves a task to Todo
+
+![todo](./assets/todo.gif)
+
+### **doing**
+
+**argument: <TASK_ID>**
+
+Moves a task to Doing
+
+![doing](./assets/doing.gif)
+
+### **done**
+
+**argument: <TASK_ID>**
+
+Moves a task to Done
+
+![done](./assets/done.gif)
+
+
+### **change**
+
+**argument: <TASK_ID>**
+
+Changes task
+
+![change](./assets/change.gif)
+
+### **delete** _del_
+
+**argument: <TASK_ID>**
+
+Deletes task
+
+![delete](./assets/del.gif)
+
 
 ### **new_project** _np_
 
@@ -79,56 +135,3 @@ Deletes a todo project
 
 ![delete_project](./assets/delete_project.gif)
 
-### **add**
-
-**argument: <TASK_DESCRIPTION>**
-
-Adds a new task to Todo
-
-![add](./assets/add.gif)
-
-### **todo**
-
-**argument: <TASK_ID>**
-
-Moves a task to Todo
-
-![todo](./assets/todo.gif)
-
-### **doing**
-
-**argument: <TASK_ID>**
-
-Moves a task to Doing
-
-![doing](./assets/doing.gif)
-
-### **done**
-
-**argument: <TASK_ID>**
-
-Moves a task to Done
-
-![done](./assets/done.gif)
-
-### **ls**
-
-Lists tasks in current project
-
-![ls](./assets/ls.gif)
-
-### **change**
-
-**argument: <TASK_ID>**
-
-Changes task
-
-![change](./assets/change.gif)
-
-### **delete** _del_
-
-**argument: <TASK_ID>**
-
-Deletes task
-
-![delete](./assets/del.gif)
